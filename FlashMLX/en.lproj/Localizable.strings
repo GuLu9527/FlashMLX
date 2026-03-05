@@ -84,3 +84,8 @@
 "Server not responding" = "Server not responding";
 "ERROR: Python not found at %@" = "ERROR: Python not found at %@";
 "Please install: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm" = "Please install: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm";
+
+/* Update */
+"Check for Updates" = "Check for Updates";
+"Up to date" = "Up to date";
+"Download" = "Download";

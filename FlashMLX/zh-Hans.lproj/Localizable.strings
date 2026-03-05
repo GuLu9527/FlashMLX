@@ -84,3 +84,8 @@
 "Server not responding" = "服务无响应";
 "ERROR: Python not found at %@" = "错误: 未找到 Python: %@";
 "Please install: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm" = "请安装: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm";
+
+/* Update */
+"Check for Updates" = "检查更新";
+"Up to date" = "已是最新";
+"Download" = "下载";
