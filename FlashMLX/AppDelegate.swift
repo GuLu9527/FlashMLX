@@ -11,13 +11,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let scanner = ModelScanner()
     private let serverManager = ServerManager()
     private let configManager = ConfigManager()
-
-    private var contentView: some View {
-        PopoverView()
-            .environmentObject(scanner)
-            .environmentObject(serverManager)
-            .environmentObject(configManager)
-    }
+    private lazy var hostingController: NSHostingController<some View> = {
+        NSHostingController(
+            rootView: PopoverView()
+                .environmentObject(scanner)
+                .environmentObject(serverManager)
+                .environmentObject(configManager)
+        )
+    }()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
@@ -25,7 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let popover = NSPopover()
         popover.contentSize = NSSize(width: 700, height: 480)
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: contentView)
+        popover.contentViewController = hostingController
         self.popover = popover
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -105,7 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.level = .floating
         window.center()
         window.delegate = self
-        window.contentViewController = NSHostingController(rootView: contentView)
+        window.contentViewController = hostingController
 
         self.detachedWindow = window
         window.makeKeyAndOrderFront(nil)

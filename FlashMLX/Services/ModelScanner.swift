@@ -76,16 +76,24 @@ class ModelScanner: ObservableObject {
         let fm = FileManager.default
         guard let files = try? fm.contentsOfDirectory(atPath: snapshotPath) else { return false }
 
-        let hasWeights = files.contains { $0.hasSuffix(".safetensors") }
         let hasMLXWeights = files.contains { $0 == "weights.npz" || $0.contains("mlx") }
-
         if hasMLXWeights { return true }
 
-        if config["quantization_config"] is [String: Any], hasWeights {
+        let hasSafetensors = files.contains { $0.hasSuffix(".safetensors") }
+        guard hasSafetensors else { return false }
+
+        // MLX quantized models have quantization_config with bits field
+        if let qc = config["quantization_config"] as? [String: Any], qc["bits"] is Int {
             return true
         }
 
-        if config["model_type"] != nil, hasWeights {
+        // Single safetensors file (typical MLX converted model) vs PyTorch shards
+        let safetensorFiles = files.filter { $0.hasSuffix(".safetensors") }
+        let hasSingleWeight = safetensorFiles.count == 1 && safetensorFiles.first == "model.safetensors"
+
+        // Check for MLX-specific: single model.safetensors without pytorch_model.bin
+        let hasPyTorch = files.contains { $0.contains("pytorch_model") || $0.contains(".bin") }
+        if hasSingleWeight && !hasPyTorch && config["model_type"] != nil {
             return true
         }
 
