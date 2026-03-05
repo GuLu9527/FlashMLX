@@ -31,45 +31,47 @@ struct ConfigView: View {
                     }
                 }
 
-                configSection("Context Length") {
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Slider(value: $sliderValue, in: 2048...131072, step: 2048) { editing in
-                                if !editing {
-                                    configManager.config.contextLength = Int(sliderValue)
+                if configManager.config.modelType != .embedding {
+                    configSection("Context Length") {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Slider(value: $sliderValue, in: 2048...131072, step: 2048) { editing in
+                                    if !editing {
+                                        configManager.config.contextLength = Int(sliderValue)
+                                    }
+                                }
+                                Text("\(Int(sliderValue))")
+                                    .font(.system(.body, design: .monospaced))
+                                    .frame(width: 60, alignment: .trailing)
+                            }
+                            HStack(spacing: 4) {
+                                ForEach([4096, 8192, 16384, 32768, 65536, 131072], id: \.self) { value in
+                                    Button(action: {
+                                        sliderValue = Double(value)
+                                        configManager.config.contextLength = value
+                                    }) {
+                                        Text(contextLabel(value))
+                                            .font(.system(size: 10, weight: .medium))
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 3)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 4)
+                                                    .fill(Int(sliderValue) == value
+                                                          ? Color.accentColor.opacity(0.2)
+                                                          : Color.secondary.opacity(0.1))
+                                            )
+                                            .foregroundColor(Int(sliderValue) == value
+                                                             ? .accentColor : .secondary)
+                                    }
+                                    .buttonStyle(.plain)
                                 }
                             }
-                            Text("\(Int(sliderValue))")
-                                .font(.system(.body, design: .monospaced))
-                                .frame(width: 60, alignment: .trailing)
+                            Text("Higher values use more memory")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
                         }
-                        HStack(spacing: 4) {
-                            ForEach([4096, 8192, 16384, 32768, 65536, 131072], id: \.self) { value in
-                                Button(action: {
-                                    sliderValue = Double(value)
-                                    configManager.config.contextLength = value
-                                }) {
-                                    Text(contextLabel(value))
-                                        .font(.system(size: 10, weight: .medium))
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 3)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .fill(Int(sliderValue) == value
-                                                      ? Color.accentColor.opacity(0.2)
-                                                      : Color.secondary.opacity(0.1))
-                                        )
-                                        .foregroundColor(Int(sliderValue) == value
-                                                         ? .accentColor : .secondary)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        Text("Higher values use more memory")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
+                        .onAppear { sliderValue = Double(configManager.config.contextLength) }
                     }
-                    .onAppear { sliderValue = Double(configManager.config.contextLength) }
                 }
 
                 configSection("Port") {
@@ -86,7 +88,7 @@ struct ConfigView: View {
                 if let model = selectedModel {
                     configSection("Model Type") {
                         HStack(spacing: 6) {
-                            Image(systemName: model.isMultimodal ? "eye" : "text.bubble")
+                            Image(systemName: model.isEmbeddingModel ? "textformat.abc" : (model.isMultimodal ? "eye" : "text.bubble"))
                                 .foregroundColor(.accentColor)
                             Text(model.modelType)
                                 .font(.system(.subheadline, design: .monospaced))
@@ -109,7 +111,7 @@ struct ConfigView: View {
                     }
                 }
 
-                if let model = selectedModel {
+                if let model = selectedModel, configManager.config.modelType != .embedding {
                     configSection("Memory Estimate") {
                         let modelGB = Double(model.size) / 1_073_741_824
                         let contextGB = configManager.config.estimatedMemoryGB

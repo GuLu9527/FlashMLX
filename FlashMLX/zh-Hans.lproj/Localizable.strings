@@ -31,6 +31,7 @@
 "Model Type" = "模型类型";
 "Language Model" = "语言模型";
 "Multimodal" = "多模态";
+"Embedding" = "嵌入模型";
 "(Auto-detected)" = "(自动识别)";
 "Python" = "Python";
 "Python Path" = "Python 路径";

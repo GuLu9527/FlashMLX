@@ -157,11 +157,20 @@ struct StatusView: View {
     }
 
     private func copyCurlCommand() {
-        let curl = """
+        let curl: String
+        if configManager.config.modelType == .embedding {
+            curl = """
+curl \(configManager.config.apiURL)/embeddings \\
+  -H "Content-Type: application/json" \\
+  -d '{"model": "default", "input": "Hello world"}'
+"""
+        } else {
+            curl = """
 curl \(configManager.config.apiURL)/chat/completions \\
   -H "Content-Type: application/json" \\
   -d '{"model": "default", "messages": [{"role": "user", "content": "Hello"}]}'
 """
+        }
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(curl, forType: .string)
     }

@@ -30,6 +30,8 @@ struct MLXModel: Identifiable, Hashable {
 
     let hasVisionConfig: Bool
 
+    let isEmbeddingModel: Bool
+
     var isMultimodal: Bool {
         if hasVisionConfig { return true }
         let multimodalTypes = [
@@ -44,6 +46,8 @@ struct MLXModel: Identifiable, Hashable {
     }
 
     var detectedModelType: ServerConfig.ModelType {
-        isMultimodal ? .multimodal : .lm
+        if isEmbeddingModel { return .embedding }
+        if isMultimodal { return .multimodal }
+        return .lm
     }
 }

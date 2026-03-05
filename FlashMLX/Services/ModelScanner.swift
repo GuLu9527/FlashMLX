@@ -55,6 +55,7 @@ class ModelScanner: ObservableObject {
             let hasVision = config["vision_config"] is [String: Any]
                 || config["visual"] is [String: Any]
                 || config["image_size"] is Int
+            let isEmbedding = self.isEmbeddingModel(name: dir, config: config, snapshotPath: snapshotPath)
 
             let model = MLXModel(
                 id: dir,
@@ -64,7 +65,8 @@ class ModelScanner: ObservableObject {
                 modelType: modelType,
                 quantization: quantization,
                 parameterCount: paramCount,
-                hasVisionConfig: hasVision
+                hasVisionConfig: hasVision,
+                isEmbeddingModel: isEmbedding
             )
             results.append(model)
         }
@@ -131,6 +133,31 @@ class ModelScanner: ObservableObject {
         let ffn = hiddenSize * intermediateSize * 3
         let params = Double((attn + ffn) * numLayers + vocabSize * hiddenSize) / 1_000_000_000.0
         return String(format: "%.1fB", params)
+    }
+
+    private func isEmbeddingModel(name: String, config: [String: Any], snapshotPath: String) -> Bool {
+        let embeddingModelTypes = [
+            "bert", "nomic_bert", "xlm-roberta", "xlm_roberta",
+            "roberta", "distilbert", "albert", "deberta",
+        ]
+        let typeLower = (config["model_type"] as? String ?? "").lowercased()
+        if embeddingModelTypes.contains(where: { typeLower.contains($0) }) {
+            return true
+        }
+
+        let embeddingNameKeywords = ["embed", "e5-", "bge-", "gte-", "jina-embed"]
+        let nameLower = name.lowercased()
+        if embeddingNameKeywords.contains(where: { nameLower.contains($0) }) {
+            return true
+        }
+
+        let fm = FileManager.default
+        let poolingDir = (snapshotPath as NSString).appendingPathComponent("1_Pooling")
+        if fm.fileExists(atPath: poolingDir) {
+            return true
+        }
+
+        return false
     }
 
     private func directorySize(path: String) -> Int64 {

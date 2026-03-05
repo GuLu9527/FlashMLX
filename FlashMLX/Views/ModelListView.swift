@@ -82,6 +82,9 @@ struct ModelRow: View {
                 if let params = model.parameterCount {
                     Badge(text: params, color: .secondary)
                 }
+                if model.isEmbeddingModel {
+                    Badge(text: "Embed", color: .purple)
+                }
             }
         }
         .padding(.vertical, 2)

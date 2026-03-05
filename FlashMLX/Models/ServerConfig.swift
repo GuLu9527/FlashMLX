@@ -10,12 +10,40 @@ struct ServerConfig: Codable {
     enum ModelType: String, Codable, CaseIterable {
         case lm = "lm"
         case multimodal = "multimodal"
+        case embedding = "embedding"
 
         var displayName: String {
             switch self {
             case .lm: return String(localized: "Language Model")
             case .multimodal: return String(localized: "Multimodal")
+            case .embedding: return String(localized: "Embedding")
             }
+        }
+    }
+
+    var serverCommand: String {
+        switch modelType {
+        case .embedding:
+            return "mlx_openai_server"
+        case .lm, .multimodal:
+            return "mlx_lm.server"
+        }
+    }
+
+    var serverArguments: [String] {
+        switch modelType {
+        case .embedding:
+            return [
+                "launch",
+                "--model-path", modelPath,
+                "--model-type", "embeddings",
+                "--port", String(port),
+            ]
+        case .lm, .multimodal:
+            return [
+                "--model", modelPath,
+                "--port", String(port),
+            ]
         }
     }
 

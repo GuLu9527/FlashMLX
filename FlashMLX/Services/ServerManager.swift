@@ -90,19 +90,33 @@ class ServerManager: NSObject, ObservableObject {
             return
         }
 
-        guard !isPortInUse(port: config.port) else {
-            status = .error("Port \(config.port) in use")
-            appendLog("ERROR: Port \(config.port) is already in use")
-            return
+        if isPortInUse(port: config.port) {
+            appendLog("Port \(config.port) is in use, attempting to free it...")
+            if !killProcessOnPort(config.port) {
+                status = .error("Port \(config.port) in use")
+                appendLog("ERROR: Could not free port \(config.port)")
+                return
+            }
+            appendLog("Port \(config.port) freed successfully")
         }
 
         let proc = Process()
-        proc.executableURL = URL(fileURLWithPath: pythonPath)
-        proc.arguments = [
-            "-m", "mlx_lm.server",
-            "--model", config.modelPath,
-            "--port", String(config.port),
-        ]
+        if config.modelType == .embedding {
+            // Use mlx-openai-server binary from same venv bin directory
+            let binDir = (pythonPath as NSString).deletingLastPathComponent
+            let serverBin = (binDir as NSString).appendingPathComponent("mlx-openai-server")
+            guard FileManager.default.fileExists(atPath: serverBin) else {
+                status = .error("mlx-openai-server not found")
+                appendLog("ERROR: mlx-openai-server not found at \(serverBin)")
+                appendLog("Please install: \(pythonPath) -m pip install mlx-openai-server")
+                return
+            }
+            proc.executableURL = URL(fileURLWithPath: serverBin)
+            proc.arguments = config.serverArguments
+        } else {
+            proc.executableURL = URL(fileURLWithPath: pythonPath)
+            proc.arguments = ["-m", config.serverCommand] + config.serverArguments
+        }
 
         let outPipe = Pipe()
         let errPipe = Pipe()
@@ -305,6 +319,81 @@ class ServerManager: NSObject, ObservableObject {
                 }
             }
         }.resume()
+    }
+
+    // MARK: - Orphan Process Cleanup
+
+    func cleanupOrphanProcesses() {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            let orphans = Self.findMLXServerProcesses()
+            if !orphans.isEmpty {
+                for pid in orphans {
+                    kill(pid, SIGTERM)
+                }
+                DispatchQueue.main.async {
+                    self?.appendLog("Cleaned up \(orphans.count) orphan server process(es)")
+                }
+            }
+        }
+    }
+
+    static func findMLXServerProcesses() -> [pid_t] {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/bin/ps")
+        task.arguments = ["-eo", "pid,command"]
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = Pipe()
+
+        do {
+            try task.run()
+            task.waitUntilExit()
+        } catch { return [] }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8) else { return [] }
+
+        let patterns = ["mlx_lm.server", "mlx_lm server", "mlx-openai-server"]
+        let myPid = ProcessInfo.processInfo.processIdentifier
+        var pids: [pid_t] = []
+
+        for line in output.components(separatedBy: "\n") {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard patterns.contains(where: { trimmed.contains($0) }) else { continue }
+            let parts = trimmed.split(separator: " ", maxSplits: 1)
+            guard let pidStr = parts.first, let pid = pid_t(pidStr), pid != myPid else { continue }
+            pids.append(pid)
+        }
+        return pids
+    }
+
+    private func killProcessOnPort(_ port: Int) -> Bool {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/sbin/lsof")
+        task.arguments = ["-ti", ":\(port)"]
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = Pipe()
+
+        do {
+            try task.run()
+            task.waitUntilExit()
+        } catch { return false }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !output.isEmpty else { return false }
+
+        let myPid = ProcessInfo.processInfo.processIdentifier
+        for pidStr in output.components(separatedBy: "\n") {
+            if let pid = pid_t(pidStr.trimmingCharacters(in: .whitespaces)), pid != myPid {
+                kill(pid, SIGTERM)
+            }
+        }
+
+        // Wait briefly for port to free up
+        Thread.sleep(forTimeInterval: 1.0)
+        return !isPortInUse(port: port)
     }
 
     // MARK: - Notifications

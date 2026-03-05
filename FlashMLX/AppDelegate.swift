@@ -23,7 +23,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Prevent multiple instances
+        let runningApps = NSWorkspace.shared.runningApplications.filter {
+            $0.bundleIdentifier == Bundle.main.bundleIdentifier && $0.processIdentifier != ProcessInfo.processInfo.processIdentifier
+        }
+        if let existing = runningApps.first {
+            existing.activate()
+            NSApp.terminate(nil)
+            return
+        }
+
         AppDelegate.shared = self
+
+        // Clean up orphan server processes from previous crashes
+        serverManager.cleanupOrphanProcesses()
 
         let popover = NSPopover()
         popover.contentSize = NSSize(width: 700, height: 480)
