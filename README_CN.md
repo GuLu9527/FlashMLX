@@ -1,5 +1,7 @@
 # ⚡ FlashMLX
 
+[English](README.md)
+
 macOS 菜单栏轻量级 MLX 模型启动器，管理本地 MLX 模型的启停与配置。
 
 **~2MB 体积** — 常驻菜单栏，一键启停推理服务。

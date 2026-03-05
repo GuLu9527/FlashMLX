@@ -1,5 +1,7 @@
 # ⚡ FlashMLX
 
+[中文文档](README_CN.md)
+
 A lightweight macOS menubar app for managing local MLX model inference servers.
 
 **~2MB binary** — menubar-resident, one-click start/stop.
