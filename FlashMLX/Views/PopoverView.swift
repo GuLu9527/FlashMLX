@@ -8,18 +8,16 @@ struct PopoverView: View {
     @State private var selectedModel: MLXModel?
 
     enum Tab: String, CaseIterable {
-        case config = "Config 配置"
-        case status = "Status 状态"
-        case logs = "Logs 日志"
-        case download = "Download 下载"
-        case settings = "Settings 设置"
+        case config = "配置"
+        case status = "状态"
+        case logs = "日志"
+        case settings = "设置"
 
         var icon: String {
             switch self {
             case .config: return "slider.horizontal.3"
             case .status: return "heart.text.square"
             case .logs: return "doc.text"
-            case .download: return "arrow.down.circle"
             case .settings: return "gear"
             }
         }
@@ -32,7 +30,7 @@ struct PopoverView: View {
 
             HStack(spacing: 0) {
                 ModelListView(selectedModel: $selectedModel)
-                    .frame(width: 200)
+                    .frame(minWidth: 180, idealWidth: 200)
 
                 Divider()
 
@@ -48,8 +46,6 @@ struct PopoverView: View {
                             StatusView()
                         case .logs:
                             LogView()
-                        case .download:
-                            DownloadView()
                         case .settings:
                             SettingsView()
                         }
@@ -58,14 +54,11 @@ struct PopoverView: View {
                 }
             }
         }
-        .frame(width: 680, height: 480)
+        .frame(minWidth: 580, minHeight: 380)
         .onChange(of: selectedModel) { _, newValue in
             if let model = newValue {
                 configManager.config.modelPath = model.path
             }
-        }
-        .onExitCommand {
-            NSApp.keyWindow?.close()
         }
     }
 
@@ -85,18 +78,16 @@ struct PopoverView: View {
 
             Spacer()
 
-            HStack(spacing: 4) {
-                Circle()
-                    .fill(statusColor)
-                    .frame(width: 8, height: 8)
-                Text(server.status.displayText)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+            Circle()
+                .fill(statusColor)
+                .frame(width: 8, height: 8)
+            Text(server.status.displayText)
+                .font(.caption)
+                .foregroundColor(.secondary)
 
             Button(action: toggleServer) {
                 Label(
-                    server.status.isRunning ? "Stop 停止" : "Start 启动",
+                    server.status.isRunning ? "停止" : "启动",
                     systemImage: server.status.isRunning ? "stop.fill" : "play.fill"
                 )
             }
@@ -105,26 +96,15 @@ struct PopoverView: View {
             .controlSize(.small)
             .disabled(configManager.config.modelPath.isEmpty)
 
-            Button(action: {
-                AppDelegate.shared.detachToWindow()
-            }) {
-                Image(systemName: "arrow.up.left.and.arrow.down.right")
-                    .foregroundColor(.secondary)
-                    .font(.caption)
-            }
-            .buttonStyle(.borderless)
-            .help("Detach to window 拆卸为窗口")
-
             Button(action: { NSApp.terminate(nil) }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.secondary)
-                    .font(.caption)
             }
             .buttonStyle(.borderless)
-            .help("Quit 退出 FlashMLX")
+            .help("退出 FlashMLX")
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
     }
 
     private var tabBar: some View {

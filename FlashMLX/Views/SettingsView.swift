@@ -9,30 +9,30 @@ struct SettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // Launch at Login
-                settingsSection("General 通用") {
-                    Toggle("Launch at Login 开机自启", isOn: $launchAtLogin)
+                settingsSection("通用") {
+                    Toggle("开机自启", isOn: $launchAtLogin)
                         .onChange(of: launchAtLogin) { _, newValue in
                             toggleLaunchAtLogin(newValue)
                         }
 
-                    Text("Start FlashMLX automatically when you log in 登录时自动启动")
+                    Text("登录时自动启动 FlashMLX")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
 
                 // Python Environment
-                settingsSection("Python 环境") {
+                settingsSection("Python") {
                     HStack {
-                        TextField("Python 路径", text: $configManager.config.pythonPath)
+                        TextField("Python Path", text: $configManager.config.pythonPath)
                             .textFieldStyle(.roundedBorder)
                             .font(.system(.caption, design: .monospaced))
-                        Button("Browse 浏览") {
+                        Button("浏览") {
                             browseForPython()
                         }
                         .font(.caption)
                     }
 
-                    Button("Verify Python 验证") {
+                    Button("验证") {
                         verifyPython()
                     }
                     .font(.caption)
@@ -51,9 +51,9 @@ struct SettingsView: View {
                 }
 
                 // Default Server Settings
-                settingsSection("Default Settings 默认设置") {
+                settingsSection("默认设置") {
                     HStack {
-                        Text("Default Port 默认端口:")
+                        Text("默认端口:")
                             .font(.caption)
                         TextField("Port", value: $configManager.config.port, format: .number)
                             .textFieldStyle(.roundedBorder)
@@ -61,7 +61,7 @@ struct SettingsView: View {
                     }
 
                     HStack {
-                        Text("Default Context 默认上下文:")
+                        Text("默认上下文:")
                             .font(.caption)
                         Text("\(configManager.config.contextLength)")
                             .font(.system(.caption, design: .monospaced))
@@ -69,7 +69,7 @@ struct SettingsView: View {
                 }
 
                 // About
-                settingsSection("About 关于") {
+                settingsSection("关于") {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Image(systemName: "bolt.fill")
@@ -80,15 +80,15 @@ struct SettingsView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        Text("macOS MLX Model Launcher 模型启动器")
+                        Text("macOS MLX 模型启动器")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
 
                 // Reset
-                settingsSection("Danger Zone 危险操作") {
-                    Button("Reset All Settings 重置所有设置", role: .destructive) {
+                settingsSection("危险操作") {
+                    Button("重置所有设置", role: .destructive) {
                         showResetAlert = true
                     }
                     .font(.caption)
@@ -96,13 +96,13 @@ struct SettingsView: View {
             }
             .padding(16)
         }
-        .alert("Reset Settings 重置设置", isPresented: $showResetAlert) {
-            Button("Reset 重置", role: .destructive) {
+        .alert("重置设置", isPresented: $showResetAlert) {
+            Button("重置", role: .destructive) {
                 configManager.config = ServerConfig()
             }
-            Button("Cancel 取消", role: .cancel) {}
+            Button("取消", role: .cancel) {}
         } message: {
-            Text("This will reset all settings to defaults 将重置所有设置为默认值，且无法撤销。")
+            Text("将重置所有设置为默认值，且无法撤销。")
         }
     }
 

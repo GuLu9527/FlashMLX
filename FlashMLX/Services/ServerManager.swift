@@ -10,10 +10,10 @@ enum ServerStatus: Equatable {
 
     var displayText: String {
         switch self {
-        case .stopped: return "Stopped 已停止"
-        case .starting: return "Starting 启动中..."
-        case .running: return "Running 运行中"
-        case .error(let msg): return "Error 错误: \(msg)"
+        case .stopped: return "已停止"
+        case .starting: return "启动中..."
+        case .running: return "运行中"
+        case .error(let msg): return "错误: \(msg)"
         }
     }
 

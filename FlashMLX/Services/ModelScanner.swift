@@ -104,7 +104,11 @@ class ModelScanner: ObservableObject {
               let numLayers = config["num_hidden_layers"] as? Int,
               let vocabSize = config["vocab_size"] as? Int else { return nil }
 
-        let params = Double(hiddenSize * hiddenSize * 4 * numLayers + vocabSize * hiddenSize) / 1_000_000_000.0
+        let intermediateSize = config["intermediate_size"] as? Int ?? hiddenSize * 4
+        // Attention (Q/K/V/O) + FFN (gate/up/down) + embedding
+        let attn = hiddenSize * hiddenSize * 4
+        let ffn = hiddenSize * intermediateSize * 3
+        let params = Double((attn + ffn) * numLayers + vocabSize * hiddenSize) / 1_000_000_000.0
         return String(format: "%.1fB", params)
     }
 

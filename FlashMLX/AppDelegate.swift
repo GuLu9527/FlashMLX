@@ -11,23 +11,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let scanner = ModelScanner()
     private let serverManager = ServerManager()
     private let configManager = ConfigManager()
-    private let downloader = ModelDownloader()
-    @objc dynamic var isDetached = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
 
-        let popover = NSPopover()
-        popover.contentSize = NSSize(width: 680, height: 480)
-        popover.behavior = .transient
-        popover.contentViewController = NSHostingController(
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 720, height: 500),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "FlashMLX"
+        window.minSize = NSSize(width: 580, height: 380)
+        window.isReleasedWhenClosed = false
+        window.level = .floating
+        window.center()
+        window.contentViewController = NSHostingController(
             rootView: PopoverView()
                 .environmentObject(scanner)
                 .environmentObject(serverManager)
                 .environmentObject(configManager)
-                .environmentObject(downloader)
         )
-        self.popover = popover
+        self.detachedWindow = window
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem?.button {
@@ -73,66 +78,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func togglePopover() {
-        // If detached window is visible, bring it to front
-        if let window = detachedWindow, window.isVisible {
+        guard let window = detachedWindow else { return }
+        if window.isVisible {
+            window.orderOut(nil)
+        } else {
             window.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
-            return
-        }
-
-        guard let popover = popover, let button = statusItem?.button else { return }
-        if popover.isShown {
-            popover.performClose(nil)
-        } else {
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-            popover.contentViewController?.view.window?.makeKey()
-        }
-    }
-
-    // MARK: - Detach / Reattach
-
-    func detachToWindow() {
-        popover?.performClose(nil)
-
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 720, height: 520),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable],
-            backing: .buffered,
-            defer: false
-        )
-        window.title = "FlashMLX"
-        window.center()
-        window.isReleasedWhenClosed = false
-        window.minSize = NSSize(width: 600, height: 400)
-        window.level = .floating
-        window.delegate = self
-
-        window.contentViewController = NSHostingController(
-            rootView: PopoverView()
-                .environmentObject(scanner)
-                .environmentObject(serverManager)
-                .environmentObject(configManager)
-                .environmentObject(downloader)
-        )
-
-        self.detachedWindow = window
-        self.isDetached = true
-        window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-    }
-
-    func reattachToPopover() {
-        detachedWindow?.close()
-        detachedWindow = nil
-        isDetached = false
-    }
-}
-
-extension AppDelegate: NSWindowDelegate {
-    func windowWillClose(_ notification: Notification) {
-        if (notification.object as? NSWindow) === detachedWindow {
-            detachedWindow = nil
-            isDetached = false
         }
     }
 }
