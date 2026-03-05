@@ -7,14 +7,14 @@ struct LogView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("\(server.logs.count) 行")
+                Text("\(server.logs.count) lines")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()
-                Toggle("自动滚动", isOn: $autoScroll)
+                Toggle("Auto-scroll", isOn: $autoScroll)
                     .toggleStyle(.checkbox)
                     .font(.caption)
-                Button("清除") {
+                Button("Clear") {
                     server.logs.removeAll()
                 }
                 .font(.caption)

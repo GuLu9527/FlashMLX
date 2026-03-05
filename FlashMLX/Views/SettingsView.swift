@@ -9,13 +9,13 @@ struct SettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // Launch at Login
-                settingsSection("通用") {
-                    Toggle("开机自启", isOn: $launchAtLogin)
+                settingsSection("General") {
+                    Toggle("Launch at Login", isOn: $launchAtLogin)
                         .onChange(of: launchAtLogin) { _, newValue in
                             toggleLaunchAtLogin(newValue)
                         }
 
-                    Text("登录时自动启动 FlashMLX")
+                    Text("Start FlashMLX automatically when you log in")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
@@ -26,13 +26,13 @@ struct SettingsView: View {
                         TextField("Python Path", text: $configManager.config.pythonPath)
                             .textFieldStyle(.roundedBorder)
                             .font(.system(.caption, design: .monospaced))
-                        Button("浏览") {
+                        Button("Browse") {
                             browseForPython()
                         }
                         .font(.caption)
                     }
 
-                    Button("验证") {
+                    Button("Verify") {
                         verifyPython()
                     }
                     .font(.caption)
@@ -51,9 +51,9 @@ struct SettingsView: View {
                 }
 
                 // Default Server Settings
-                settingsSection("默认设置") {
+                settingsSection("Default Settings") {
                     HStack {
-                        Text("默认端口:")
+                        Text("Default Port:")
                             .font(.caption)
                         TextField("Port", value: $configManager.config.port, format: .number)
                             .textFieldStyle(.roundedBorder)
@@ -61,7 +61,7 @@ struct SettingsView: View {
                     }
 
                     HStack {
-                        Text("默认上下文:")
+                        Text("Default Context:")
                             .font(.caption)
                         Text("\(configManager.config.contextLength)")
                             .font(.system(.caption, design: .monospaced))
@@ -69,7 +69,7 @@ struct SettingsView: View {
                 }
 
                 // About
-                settingsSection("关于") {
+                settingsSection("About") {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Image(systemName: "bolt.fill")
@@ -80,15 +80,15 @@ struct SettingsView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        Text("macOS MLX 模型启动器")
+                        Text("macOS MLX Model Launcher")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
 
                 // Reset
-                settingsSection("危险操作") {
-                    Button("重置所有设置", role: .destructive) {
+                settingsSection("Danger Zone") {
+                    Button("Reset All Settings", role: .destructive) {
                         showResetAlert = true
                     }
                     .font(.caption)
@@ -96,13 +96,13 @@ struct SettingsView: View {
             }
             .padding(16)
         }
-        .alert("重置设置", isPresented: $showResetAlert) {
-            Button("重置", role: .destructive) {
+        .alert("Reset Settings", isPresented: $showResetAlert) {
+            Button("Reset", role: .destructive) {
                 configManager.config = ServerConfig()
             }
-            Button("取消", role: .cancel) {}
+            Button("Cancel", role: .cancel) {}
         } message: {
-            Text("将重置所有设置为默认值，且无法撤销。")
+            Text("This will reset all settings to defaults. This cannot be undone.")
         }
     }
 

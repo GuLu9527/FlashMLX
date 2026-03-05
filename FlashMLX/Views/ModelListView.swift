@@ -19,12 +19,12 @@ struct ModelListView: View {
             if scanner.isScanning {
                 HStack {
                     Spacer()
-                    ProgressView("扫描中...")
+                    ProgressView("Scanning...")
                         .font(.caption)
                     Spacer()
                 }
             } else if filteredModels.isEmpty && !scanner.models.isEmpty {
-                Text("无匹配结果")
+                Text("No matches")
                     .font(.caption)
                     .foregroundColor(.secondary)
             } else {
@@ -35,7 +35,7 @@ struct ModelListView: View {
             }
         }
         .listStyle(.sidebar)
-        .searchable(text: $searchText, prompt: "搜索模型...")
+        .searchable(text: $searchText, prompt: "Search models...")
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 HStack(spacing: 4) {
@@ -55,7 +55,7 @@ struct ModelListView: View {
                     Image(systemName: "tray")
                         .font(.title)
                         .foregroundColor(.secondary)
-                    Text("未找到 MLX 模型")
+                    Text("No MLX models found")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Text("~/.cache/huggingface/hub/")

@@ -9,7 +9,7 @@ struct ConfigView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                configSection("模型") {
+                configSection("Model") {
                     if let model = selectedModel {
                         HStack {
                             Image(systemName: "cube.fill")
@@ -25,13 +25,13 @@ struct ConfigView: View {
                             }
                         }
                     } else {
-                        Label("从侧边栏选择模型", systemImage: "arrow.left")
+                        Label("Select a model from the sidebar", systemImage: "arrow.left")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
                 }
 
-                configSection("上下文长度") {
+                configSection("Context Length") {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Slider(value: $sliderValue, in: 2048...131072, step: 2048) { editing in
@@ -65,31 +65,31 @@ struct ConfigView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        Text("值越大占用内存越多")
+                        Text("Higher values use more memory")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
                     .onAppear { sliderValue = Double(configManager.config.contextLength) }
                 }
 
-                configSection("端口") {
+                configSection("Port") {
                     HStack {
-                        TextField("端口", value: $configManager.config.port, format: .number)
+                        TextField("Port", value: $configManager.config.port, format: .number)
                             .textFieldStyle(.roundedBorder)
                             .frame(width: 80)
-                        Text("默认: 8000")
+                        Text("Default: 8000")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
 
-                configSection("模型类型") {
+                configSection("Model Type") {
                     HStack {
                         Image(systemName: configManager.config.modelType == .multimodal ? "eye" : "text.bubble")
                             .foregroundColor(.secondary)
                         Text(configManager.config.modelType.displayName)
                             .font(.subheadline)
-                        Text("(自动识别)")
+                        Text("(Auto-detected)")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
@@ -100,7 +100,7 @@ struct ConfigView: View {
                         TextField("Python Path", text: $configManager.config.pythonPath)
                             .textFieldStyle(.roundedBorder)
                             .font(.system(.caption, design: .monospaced))
-                        Button("浏览") {
+                        Button("Browse") {
                             browseForPython()
                         }
                         .font(.caption)
@@ -108,25 +108,25 @@ struct ConfigView: View {
                 }
 
                 if let model = selectedModel {
-                    configSection("内存预估") {
+                    configSection("Memory Estimate") {
                         let modelGB = Double(model.size) / 1_073_741_824
                         let contextGB = configManager.config.estimatedMemoryGB
                         let totalGB = modelGB + contextGB
 
                         VStack(alignment: .leading, spacing: 4) {
                             HStack {
-                                Text("模型:")
+                                Text("Model:")
                                 Spacer()
                                 Text(String(format: "%.1f GB", modelGB))
                             }
                             HStack {
-                                Text("上下文:")
+                                Text("Context:")
                                 Spacer()
                                 Text(String(format: "%.1f GB", contextGB))
                             }
                             Divider()
                             HStack {
-                                Text("总计:")
+                                Text("Total:")
                                     .bold()
                                 Spacer()
                                 Text(String(format: "~%.1f GB", totalGB))
@@ -149,7 +149,7 @@ struct ConfigView: View {
                                 .font(.caption)
                         }
                         .buttonStyle(.borderless)
-                        .help("复制")
+                        .help("Copy")
                     }
                 }
             }

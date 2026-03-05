@@ -1,0 +1,86 @@
+/* Tabs */
+"Config" = "配置";
+"Status" = "状态";
+"Logs" = "日志";
+"Settings" = "设置";
+
+/* Header */
+"Start" = "启动";
+"Stop" = "停止";
+"Detach to window" = "独立窗口";
+"Quit" = "退出";
+
+/* Server Status */
+"Stopped" = "已停止";
+"Starting..." = "启动中...";
+"Running" = "运行中";
+
+/* Model List */
+"Scanning..." = "扫描中...";
+"No matches" = "无匹配结果";
+"No MLX models found" = "未找到 MLX 模型";
+"Search models..." = "搜索模型...";
+
+/* Config View */
+"Model" = "模型";
+"Select a model from the sidebar" = "从侧边栏选择模型";
+"Context Length" = "上下文长度";
+"Higher values use more memory" = "值越大占用内存越多";
+"Port" = "端口";
+"Default: 8000" = "默认: 8000";
+"Model Type" = "模型类型";
+"Language Model" = "语言模型";
+"Multimodal" = "多模态";
+"(Auto-detected)" = "(自动识别)";
+"Python" = "Python";
+"Python Path" = "Python 路径";
+"Browse" = "浏览";
+"Memory Estimate" = "内存预估";
+"Model:" = "模型:";
+"Context:" = "上下文:";
+"Total:" = "总计:";
+"API" = "API";
+"Copy" = "复制";
+
+/* Status View */
+"Server Status" = "服务状态";
+"Details" = "详情";
+"Uptime" = "运行时长";
+"Memory" = "内存";
+"Health" = "健康";
+"Measuring..." = "测量中...";
+"Checking..." = "检查中...";
+"✓ Healthy" = "✓ 正常";
+"Quick Actions" = "快捷操作";
+"Copy API" = "复制 API";
+"Copy cURL" = "复制 cURL";
+"Copied!" = "已复制!";
+
+/* Log View */
+"%lld lines" = "%lld 行";
+"Auto-scroll" = "自动滚动";
+"Clear" = "清除";
+
+/* Settings View */
+"General" = "通用";
+"Launch at Login" = "开机自启";
+"Start FlashMLX automatically when you log in" = "登录时自动启动 FlashMLX";
+"Verify" = "验证";
+"Default Settings" = "默认设置";
+"Default Port:" = "默认端口:";
+"Default Context:" = "默认上下文:";
+"About" = "关于";
+"macOS MLX Model Launcher" = "macOS MLX 模型启动器";
+"Danger Zone" = "危险操作";
+"Reset All Settings" = "重置所有设置";
+"Reset Settings" = "重置设置";
+"Reset" = "重置";
+"Cancel" = "取消";
+"This will reset all settings to defaults. This cannot be undone." = "将重置所有设置为默认值，且无法撤销。";
+
+/* Notifications */
+"Server started" = "服务已启动";
+"Server stopped" = "服务已停止";
+"Server not responding" = "服务无响应";
+"ERROR: Python not found at %@" = "错误: 未找到 Python: %@";
+"Please install: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm" = "请安装: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm";

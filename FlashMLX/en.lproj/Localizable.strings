@@ -1,0 +1,86 @@
+/* Tabs */
+"Config" = "Config";
+"Status" = "Status";
+"Logs" = "Logs";
+"Settings" = "Settings";
+
+/* Header */
+"Start" = "Start";
+"Stop" = "Stop";
+"Detach to window" = "Detach to window";
+"Quit" = "Quit";
+
+/* Server Status */
+"Stopped" = "Stopped";
+"Starting..." = "Starting...";
+"Running" = "Running";
+
+/* Model List */
+"Scanning..." = "Scanning...";
+"No matches" = "No matches";
+"No MLX models found" = "No MLX models found";
+"Search models..." = "Search models...";
+
+/* Config View */
+"Model" = "Model";
+"Select a model from the sidebar" = "Select a model from the sidebar";
+"Context Length" = "Context Length";
+"Higher values use more memory" = "Higher values use more memory";
+"Port" = "Port";
+"Default: 8000" = "Default: 8000";
+"Model Type" = "Model Type";
+"Language Model" = "Language Model";
+"Multimodal" = "Multimodal";
+"(Auto-detected)" = "(Auto-detected)";
+"Python" = "Python";
+"Python Path" = "Python Path";
+"Browse" = "Browse";
+"Memory Estimate" = "Memory Estimate";
+"Model:" = "Model:";
+"Context:" = "Context:";
+"Total:" = "Total:";
+"API" = "API";
+"Copy" = "Copy";
+
+/* Status View */
+"Server Status" = "Server Status";
+"Details" = "Details";
+"Uptime" = "Uptime";
+"Memory" = "Memory";
+"Health" = "Health";
+"Measuring..." = "Measuring...";
+"Checking..." = "Checking...";
+"✓ Healthy" = "✓ Healthy";
+"Quick Actions" = "Quick Actions";
+"Copy API" = "Copy API";
+"Copy cURL" = "Copy cURL";
+"Copied!" = "Copied!";
+
+/* Log View */
+"%lld lines" = "%lld lines";
+"Auto-scroll" = "Auto-scroll";
+"Clear" = "Clear";
+
+/* Settings View */
+"General" = "General";
+"Launch at Login" = "Launch at Login";
+"Start FlashMLX automatically when you log in" = "Start FlashMLX automatically when you log in";
+"Verify" = "Verify";
+"Default Settings" = "Default Settings";
+"Default Port:" = "Default Port:";
+"Default Context:" = "Default Context:";
+"About" = "About";
+"macOS MLX Model Launcher" = "macOS MLX Model Launcher";
+"Danger Zone" = "Danger Zone";
+"Reset All Settings" = "Reset All Settings";
+"Reset Settings" = "Reset Settings";
+"Reset" = "Reset";
+"Cancel" = "Cancel";
+"This will reset all settings to defaults. This cannot be undone." = "This will reset all settings to defaults. This cannot be undone.";
+
+/* Notifications */
+"Server started" = "Server started";
+"Server stopped" = "Server stopped";
+"Server not responding" = "Server not responding";
+"ERROR: Python not found at %@" = "ERROR: Python not found at %@";
+"Please install: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm" = "Please install: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm";

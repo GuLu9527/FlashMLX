@@ -8,10 +8,10 @@ struct PopoverView: View {
     @State private var selectedModel: MLXModel?
 
     enum Tab: String, CaseIterable {
-        case config = "配置"
-        case status = "状态"
-        case logs = "日志"
-        case settings = "设置"
+        case config = "Config"
+        case status = "Status"
+        case logs = "Logs"
+        case settings = "Settings"
 
         var icon: String {
             switch self {
@@ -86,7 +86,7 @@ struct PopoverView: View {
 
             Button(action: toggleServer) {
                 Label(
-                    server.status.isRunning ? "停止" : "启动",
+                    server.status.isRunning ? "Stop" : "Start",
                     systemImage: server.status.isRunning ? "stop.fill" : "play.fill"
                 )
             }
@@ -100,14 +100,14 @@ struct PopoverView: View {
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.borderless)
-            .help("独立窗口")
+            .help("Detach to window")
 
             Button(action: { NSApp.terminate(nil) }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.borderless)
-            .help("退出")
+            .help("Quit")
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
@@ -117,7 +117,7 @@ struct PopoverView: View {
         HStack(spacing: 2) {
             ForEach(Tab.allCases, id: \.self) { tab in
                 Button(action: { withAnimation(.easeInOut(duration: 0.15)) { selectedTab = tab } }) {
-                    Label(tab.rawValue, systemImage: tab.icon)
+                    Label(LocalizedStringKey(tab.rawValue), systemImage: tab.icon)
                         .font(.caption)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
