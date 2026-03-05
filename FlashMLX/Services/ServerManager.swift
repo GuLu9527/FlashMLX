@@ -42,7 +42,10 @@ class ServerManager: NSObject, ObservableObject {
 
     override init() {
         super.init()
-        requestNotificationPermission()
+        // Defer notification permission to after app finishes launching
+        DispatchQueue.main.async { [weak self] in
+            self?.requestNotificationPermission()
+        }
         statusCancellable = $status
             .removeDuplicates()
             .sink { [weak self] newStatus in
@@ -281,10 +284,12 @@ class ServerManager: NSObject, ObservableObject {
     // MARK: - Notifications
 
     func requestNotificationPermission() {
+        guard let _ = Bundle.main.bundleIdentifier else { return }
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 
     private func sendNotification(title: String, body: String) {
+        guard let _ = Bundle.main.bundleIdentifier else { return }
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
