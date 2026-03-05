@@ -31,7 +31,7 @@ struct ConfigView: View {
                 }
 
                 configSection("Context Length") {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Slider(
                                 value: Binding(
@@ -44,6 +44,26 @@ struct ConfigView: View {
                             Text("\(configManager.config.contextLength)")
                                 .font(.system(.body, design: .monospaced))
                                 .frame(width: 60, alignment: .trailing)
+                        }
+                        // Quick presets
+                        HStack(spacing: 4) {
+                            ForEach([4096, 8192, 16384, 32768, 65536, 131072], id: \.self) { value in
+                                Button(action: { configManager.config.contextLength = value }) {
+                                    Text(contextLabel(value))
+                                        .font(.system(size: 10, weight: .medium))
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 3)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 4)
+                                                .fill(configManager.config.contextLength == value
+                                                      ? Color.accentColor.opacity(0.2)
+                                                      : Color.secondary.opacity(0.1))
+                                        )
+                                        .foregroundColor(configManager.config.contextLength == value
+                                                         ? .accentColor : .secondary)
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                         Text("Higher values use more memory")
                             .font(.caption2)
@@ -147,6 +167,13 @@ struct ConfigView: View {
     private func copyAPIURL() {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(configManager.config.apiURL, forType: .string)
+    }
+
+    private func contextLabel(_ value: Int) -> String {
+        if value >= 1024 {
+            return "\(value / 1024)K"
+        }
+        return "\(value)"
     }
 
     private func browseForPython() {

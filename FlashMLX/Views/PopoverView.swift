@@ -109,6 +109,16 @@ struct PopoverView: View {
             .controlSize(.small)
             .disabled(configManager.config.modelPath.isEmpty)
 
+            Button(action: {
+                AppDelegate.shared.detachToWindow()
+            }) {
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .foregroundColor(.secondary)
+                    .font(.caption)
+            }
+            .buttonStyle(.borderless)
+            .help("Detach to window / 拆卸为独立窗口")
+
             Button(action: { NSApp.terminate(nil) }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.secondary)

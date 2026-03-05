@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import UserNotifications
 
 enum ServerStatus: Equatable {
     case stopped
@@ -22,7 +23,7 @@ enum ServerStatus: Equatable {
     }
 }
 
-class ServerManager: ObservableObject {
+class ServerManager: NSObject, ObservableObject {
     @Published var status: ServerStatus = .stopped
     @Published var logs: [String] = []
     @Published var currentModel: String?
@@ -33,6 +34,28 @@ class ServerManager: ObservableObject {
     private var outputPipe: Pipe?
     private var errorPipe: Pipe?
     private var memoryTimer: Timer?
+    private var healthTimer: Timer?
+    private var currentPort: Int = 8000
+    @Published var isHealthy = false
+    private var consecutiveFailures = 0
+    private var statusCancellable: AnyCancellable?
+
+    override init() {
+        super.init()
+        requestNotificationPermission()
+        statusCancellable = $status
+            .removeDuplicates()
+            .sink { [weak self] newStatus in
+                switch newStatus {
+                case .running:
+                    self?.sendNotification(title: "FlashMLX", body: "Server started / 服务已启动")
+                case .error(let msg):
+                    self?.sendNotification(title: "FlashMLX", body: "Error: \(msg)")
+                default:
+                    break
+                }
+            }
+    }
 
     var uptime: String {
         guard let start = startTime else { return "--" }
@@ -122,6 +145,8 @@ class ServerManager: ObservableObject {
             appendLog("Port: \(config.port)")
 
             startMemoryMonitoring()
+            startHealthCheck(port: config.port)
+            currentPort = config.port
 
             // Fallback: mark as running after 8s if no explicit signal
             DispatchQueue.main.asyncAfter(deadline: .now() + 8) { [weak self] in
@@ -143,6 +168,7 @@ class ServerManager: ObservableObject {
         }
 
         memoryTimer?.invalidate()
+        healthTimer?.invalidate()
         proc.terminate()
 
         DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
@@ -157,8 +183,11 @@ class ServerManager: ObservableObject {
         process = nil
         currentModel = nil
         startTime = nil
+        isHealthy = false
+        consecutiveFailures = 0
         status = .stopped
         appendLog("Server stopped.")
+        sendNotification(title: "FlashMLX", body: "Server stopped / 服务已停止")
     }
 
     private func isServerReady(_ output: String) -> Bool {
@@ -208,6 +237,63 @@ class ServerManager: ObservableObject {
                 }
             } catch {}
         }
+    }
+
+    // MARK: - Health Check
+
+    private func startHealthCheck(port: Int) {
+        healthTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in
+            self?.pingServer(port: port)
+        }
+    }
+
+    private func pingServer(port: Int) {
+        guard status.isRunning else { return }
+        guard let url = URL(string: "http://localhost:\(port)/v1/models") else { return }
+
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 5
+
+        URLSession.shared.dataTask(with: request) { [weak self] _, response, error in
+            DispatchQueue.main.async {
+                guard let self = self, self.status.isRunning else { return }
+                if let http = response as? HTTPURLResponse, http.statusCode == 200 {
+                    self.isHealthy = true
+                    self.consecutiveFailures = 0
+                } else {
+                    self.consecutiveFailures += 1
+                    if self.consecutiveFailures >= 3 {
+                        self.isHealthy = false
+                        self.appendLog("WARNING: Health check failed \(self.consecutiveFailures) times")
+                        if self.consecutiveFailures == 3 {
+                            self.sendNotification(
+                                title: "FlashMLX",
+                                body: "Server not responding / 服务无响应"
+                            )
+                        }
+                    }
+                }
+            }
+        }.resume()
+    }
+
+    // MARK: - Notifications
+
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+    }
+
+    private func sendNotification(title: String, body: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil
+        )
+        UNUserNotificationCenter.current().add(request)
     }
 
     deinit {

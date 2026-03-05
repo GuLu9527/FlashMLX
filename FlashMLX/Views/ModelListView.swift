@@ -3,6 +3,16 @@ import SwiftUI
 struct ModelListView: View {
     @EnvironmentObject var scanner: ModelScanner
     @Binding var selectedModel: MLXModel?
+    @State private var searchText = ""
+
+    private var filteredModels: [MLXModel] {
+        if searchText.isEmpty {
+            return scanner.models
+        }
+        return scanner.models.filter {
+            $0.displayName.localizedCaseInsensitiveContains(searchText)
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -10,6 +20,12 @@ struct ModelListView: View {
                 Text("Models")
                     .font(.subheadline.bold())
                 Spacer()
+                Text("\(filteredModels.count)")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(Capsule().fill(Color.secondary.opacity(0.15)))
                 Button(action: { scanner.scan() }) {
                     Image(systemName: "arrow.clockwise")
                         .font(.caption)
@@ -19,6 +35,29 @@ struct ModelListView: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
+
+            // Search field
+            HStack(spacing: 4) {
+                Image(systemName: "magnifyingglass")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                TextField("Filter...", text: $searchText)
+                    .textFieldStyle(.plain)
+                    .font(.caption)
+                if !searchText.isEmpty {
+                    Button(action: { searchText = "" }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(.borderless)
+                }
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(RoundedRectangle(cornerRadius: 6).fill(Color(nsColor: .textBackgroundColor)))
+            .padding(.horizontal, 8)
+            .padding(.bottom, 6)
 
             Divider()
 
@@ -41,9 +80,15 @@ struct ModelListView: View {
                         .foregroundColor(.secondary.opacity(0.7))
                 }
                 Spacer()
+            } else if filteredModels.isEmpty {
+                Spacer()
+                Text("No matches")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
             } else {
                 List(selection: $selectedModel) {
-                    ForEach(scanner.models) { model in
+                    ForEach(filteredModels) { model in
                         ModelRow(model: model)
                             .tag(model)
                     }

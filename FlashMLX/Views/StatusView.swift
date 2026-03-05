@@ -68,6 +68,7 @@ struct StatusView: View {
                 infoRow("Port", value: "\(configManager.config.port)")
                 infoRow("Uptime", value: "\(server.uptime)\(uptimeRefresh ? "" : "")")
                 infoRow("Memory", value: server.memoryUsageMB > 0 ? String(format: "%.0f MB", server.memoryUsageMB) : "Measuring...")
+                infoRow("Health", value: server.isHealthy ? "✓ Healthy" : "Checking...")
                 infoRow("API URL", value: configManager.config.apiURL)
             }
             .padding(12)
