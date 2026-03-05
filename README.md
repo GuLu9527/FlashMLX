@@ -1,5 +1,11 @@
 # ⚡ FlashMLX
 
+[![macOS](https://img.shields.io/badge/macOS-14.0%2B-black?logo=apple)](https://github.com/GuLu9527/FlashMLX)
+[![Swift](https://img.shields.io/badge/Swift-5.9-orange?logo=swift)](https://github.com/GuLu9527/FlashMLX)
+[![License](https://img.shields.io/github/license/GuLu9527/FlashMLX)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/GuLu9527/FlashMLX)](https://github.com/GuLu9527/FlashMLX/releases)
+[![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-M1%2FM2%2FM3%2FM4-blue)](https://github.com/GuLu9527/FlashMLX)
+
 [中文文档](README_CN.md)
 
 A lightweight macOS menubar app for managing local MLX model inference servers.
