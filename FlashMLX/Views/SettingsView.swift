@@ -3,6 +3,7 @@ import ServiceManagement
 
 struct SettingsView: View {
     @EnvironmentObject var configManager: ConfigManager
+    @EnvironmentObject var updateChecker: UpdateChecker
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
 
     var body: some View {
@@ -68,21 +69,59 @@ struct SettingsView: View {
                     }
                 }
 
-                // About
+                // About & Update
                 settingsSection("About") {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Image(systemName: "bolt.fill")
                                 .foregroundColor(.yellow)
                             Text("FlashMLX")
                                 .font(.subheadline.bold())
-                            Text("v1.0.0")
+                            Text("v\(updateChecker.currentVersionDisplay)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                         Text("macOS MLX Model Launcher")
                             .font(.caption)
                             .foregroundColor(.secondary)
+
+                        Divider()
+
+                        HStack {
+                            Button("Check for Updates") {
+                                updateChecker.check()
+                            }
+                            .font(.caption)
+                            .disabled(updateChecker.isChecking)
+
+                            if updateChecker.isChecking {
+                                ProgressView()
+                                    .controlSize(.small)
+                            }
+                        }
+
+                        if updateChecker.hasUpdate, let latest = updateChecker.latestVersion {
+                            HStack {
+                                Image(systemName: "arrow.up.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("v\(latest) available")
+                                    .font(.caption)
+                                Button("Download") {
+                                    updateChecker.openDownloadPage()
+                                }
+                                .font(.caption)
+                                .buttonStyle(.borderedProminent)
+                                .controlSize(.small)
+                            }
+                        } else if updateChecker.latestVersion != nil {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("Up to date")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     }
                 }
 

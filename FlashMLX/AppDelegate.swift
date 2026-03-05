@@ -11,12 +11,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let scanner = ModelScanner()
     private let serverManager = ServerManager()
     private let configManager = ConfigManager()
+    private let updateChecker = UpdateChecker()
     private lazy var hostingController: NSHostingController<some View> = {
         NSHostingController(
             rootView: PopoverView()
                 .environmentObject(scanner)
                 .environmentObject(serverManager)
                 .environmentObject(configManager)
+                .environmentObject(updateChecker)
         )
     }()
 
