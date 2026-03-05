@@ -115,7 +115,20 @@ class ModelScanner: ObservableObject {
 
         while let file = enumerator.nextObject() as? String {
             let filePath = (path as NSString).appendingPathComponent(file)
-            if let attrs = try? fm.attributesOfItem(atPath: filePath),
+            // Resolve symlinks (HuggingFace cache uses symlinks to blobs/)
+            let resolvedPath: String
+            if let dest = try? fm.destinationOfSymbolicLink(atPath: filePath) {
+                if dest.hasPrefix("/") {
+                    resolvedPath = dest
+                } else {
+                    resolvedPath = ((filePath as NSString).deletingLastPathComponent as NSString).appendingPathComponent(dest)
+                }
+            } else {
+                resolvedPath = filePath
+            }
+            if let attrs = try? fm.attributesOfItem(atPath: resolvedPath),
+               let fileType = attrs[.type] as? FileAttributeType,
+               fileType == .typeRegular,
                let size = attrs[.size] as? Int64 {
                 totalSize += size
             }
