@@ -10,9 +10,9 @@ enum ServerStatus: Equatable {
 
     var displayText: String {
         switch self {
-        case .stopped: return "Stopped"
-        case .starting: return "Starting..."
-        case .running: return "Running"
+        case .stopped: return String(localized: "Stopped")
+        case .starting: return String(localized: "Starting...")
+        case .running: return String(localized: "Running")
         case .error(let msg): return "Error: \(msg)"
         }
     }
@@ -48,9 +48,10 @@ class ServerManager: NSObject, ObservableObject {
             .sink { [weak self] newStatus in
                 switch newStatus {
                 case .running:
-                    self?.sendNotification(title: "FlashMLX", body: "Server started / 服务已启动")
+                    self?.sendNotification(title: "FlashMLX", body: String(localized: "Server started"))
                 case .error(let msg):
                     self?.sendNotification(title: "FlashMLX", body: "Error: \(msg)")
+
                 default:
                     break
                 }
@@ -187,7 +188,7 @@ class ServerManager: NSObject, ObservableObject {
         consecutiveFailures = 0
         status = .stopped
         appendLog("Server stopped.")
-        sendNotification(title: "FlashMLX", body: "Server stopped / 服务已停止")
+        sendNotification(title: "FlashMLX", body: String(localized: "Server stopped"))
     }
 
     private func isServerReady(_ output: String) -> Bool {
@@ -268,7 +269,7 @@ class ServerManager: NSObject, ObservableObject {
                         if self.consecutiveFailures == 3 {
                             self.sendNotification(
                                 title: "FlashMLX",
-                                body: "Server not responding / 服务无响应"
+                                body: String(localized: "Server not responding")
                             )
                         }
                     }

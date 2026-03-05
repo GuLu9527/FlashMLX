@@ -5,6 +5,8 @@ options:
     macOS: "14.0"
   generateEmptyDirectories: true
   groupSortPosition: top
+  developmentLanguage: en
+  knownRegions: [en, zh-Hans]
 
 settings:
   base:

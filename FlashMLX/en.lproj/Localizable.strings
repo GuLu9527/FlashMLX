@@ -1,0 +1,105 @@
+/* Tabs */
+"Config" = "Config";
+"Status" = "Status";
+"Logs" = "Logs";
+"Download" = "Download";
+"Settings" = "Settings";
+
+/* Header */
+"Start" = "Start";
+"Stop" = "Stop";
+"Stopped" = "Stopped";
+"Starting..." = "Starting...";
+"Running" = "Running";
+"Quit FlashMLX" = "Quit FlashMLX";
+"Detach to window" = "Detach to window";
+
+/* Model List */
+"Models" = "Models";
+"Filter..." = "Filter...";
+"Scanning..." = "Scanning...";
+"No MLX models found" = "No MLX models found";
+"No matches" = "No matches";
+
+/* Config View */
+"MODEL" = "MODEL";
+"Select a model from the sidebar" = "Select a model from the sidebar";
+"CONTEXT LENGTH" = "CONTEXT LENGTH";
+"Higher values use more memory" = "Higher values use more memory";
+"PORT" = "PORT";
+"Default: 8000" = "Default: 8000";
+"MODEL TYPE" = "MODEL TYPE";
+"Language Model" = "Language Model";
+"Multimodal" = "Multimodal";
+"PYTHON ENVIRONMENT" = "PYTHON ENVIRONMENT";
+"Python path" = "Python path";
+"Browse" = "Browse";
+"MEMORY ESTIMATE" = "MEMORY ESTIMATE";
+"Model:" = "Model:";
+"Context (~est.):" = "Context (~est.):";
+"Total (est.):" = "Total (est.):";
+"API ENDPOINT" = "API ENDPOINT";
+"Copy API URL" = "Copy API URL";
+
+/* Status View */
+"SERVER STATUS" = "SERVER STATUS";
+"DETAILS" = "DETAILS";
+"Port" = "Port";
+"Uptime" = "Uptime";
+"Memory" = "Memory";
+"Health" = "Health";
+"API URL" = "API URL";
+"✓ Healthy" = "✓ Healthy";
+"Checking..." = "Checking...";
+"Measuring..." = "Measuring...";
+"QUICK ACTIONS" = "QUICK ACTIONS";
+"Copy cURL" = "Copy cURL";
+"copied!" = "copied!";
+
+/* Log View */
+"%lld lines" = "%lld lines";
+"Auto-scroll" = "Auto-scroll";
+"Clear" = "Clear";
+
+/* Download View */
+"Search mlx-community models..." = "Search mlx-community models...";
+"Search" = "Search";
+"Loading models from HuggingFace..." = "Loading models from HuggingFace...";
+"Retry" = "Retry";
+"Search or browse MLX models" = "Search or browse MLX models";
+"Browse Popular" = "Browse Popular";
+"Installed Models" = "Installed Models";
+"Available Models (%lld)" = "Available Models (%lld)";
+"Installed" = "Installed";
+"Done" = "Done";
+"Download model" = "Download model";
+"Delete model" = "Delete model";
+"Delete Model" = "Delete Model";
+"Delete" = "Delete";
+"Cancel" = "Cancel";
+"Delete \"%@\"? This will remove all model files and cannot be undone." = "Delete \"%@\"? This will remove all model files and cannot be undone.";
+
+/* Settings View */
+"General" = "General";
+"Launch at Login" = "Launch at Login";
+"Start FlashMLX automatically when you log in" = "Start FlashMLX automatically when you log in";
+"Verify Python" = "Verify Python";
+"DEFAULT SERVER SETTINGS" = "DEFAULT SERVER SETTINGS";
+"Default Port:" = "Default Port:";
+"Default Context:" = "Default Context:";
+"About" = "About";
+"Lightweight MLX Model Launcher for macOS" = "Lightweight MLX Model Launcher for macOS";
+"Danger Zone" = "Danger Zone";
+"Reset All Settings" = "Reset All Settings";
+"Reset Settings" = "Reset Settings";
+"Reset" = "Reset";
+"This will reset all settings to defaults. This cannot be undone." = "This will reset all settings to defaults. This cannot be undone.";
+
+/* Notifications */
+"Server started" = "Server started";
+"Server stopped" = "Server stopped";
+"Server not responding" = "Server not responding";
+
+/* Errors */
+"Python not found" = "Python not found";
+"ERROR: Python not found at %@" = "ERROR: Python not found at %@";

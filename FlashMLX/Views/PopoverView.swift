@@ -135,7 +135,7 @@ struct PopoverView: View {
         HStack(spacing: 2) {
             ForEach(Tab.allCases, id: \.self) { tab in
                 Button(action: { selectedTab = tab }) {
-                    Label(tab.rawValue, systemImage: tab.icon)
+                    Label(LocalizedStringKey(tab.rawValue), systemImage: tab.icon)
                         .font(.caption)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)

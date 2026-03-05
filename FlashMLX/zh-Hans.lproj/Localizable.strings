@@ -1,0 +1,105 @@
+/* Tabs */
+"Config" = "配置";
+"Status" = "状态";
+"Logs" = "日志";
+"Download" = "下载";
+"Settings" = "设置";
+
+/* Header */
+"Start" = "启动";
+"Stop" = "停止";
+"Stopped" = "已停止";
+"Starting..." = "启动中...";
+"Running" = "运行中";
+"Quit FlashMLX" = "退出 FlashMLX";
+"Detach to window" = "拆卸为独立窗口";
+
+/* Model List */
+"Models" = "模型";
+"Filter..." = "搜索...";
+"Scanning..." = "扫描中...";
+"No MLX models found" = "未找到 MLX 模型";
+"No matches" = "无匹配结果";
+
+/* Config View */
+"MODEL" = "模型";
+"Select a model from the sidebar" = "从侧边栏选择模型";
+"CONTEXT LENGTH" = "上下文长度";
+"Higher values use more memory" = "值越大占用内存越多";
+"PORT" = "端口";
+"Default: 8000" = "默认: 8000";
+"MODEL TYPE" = "模型类型";
+"Language Model" = "语言模型";
+"Multimodal" = "多模态";
+"PYTHON ENVIRONMENT" = "Python 环境";
+"Python path" = "Python 路径";
+"Browse" = "浏览";
+"MEMORY ESTIMATE" = "内存预估";
+"Model:" = "模型:";
+"Context (~est.):" = "上下文 (~预估):";
+"Total (est.):" = "总计 (预估):";
+"API ENDPOINT" = "API 端点";
+"Copy API URL" = "复制 API 地址";
+
+/* Status View */
+"SERVER STATUS" = "服务状态";
+"DETAILS" = "详情";
+"Port" = "端口";
+"Uptime" = "运行时间";
+"Memory" = "内存";
+"Health" = "健康";
+"API URL" = "API 地址";
+"✓ Healthy" = "✓ 健康";
+"Checking..." = "检查中...";
+"Measuring..." = "测量中...";
+"QUICK ACTIONS" = "快捷操作";
+"Copy cURL" = "复制 cURL";
+"copied!" = "已复制!";
+
+/* Log View */
+"%lld lines" = "%lld 行";
+"Auto-scroll" = "自动滚动";
+"Clear" = "清除";
+
+/* Download View */
+"Search mlx-community models..." = "搜索 mlx-community 模型...";
+"Search" = "搜索";
+"Loading models from HuggingFace..." = "正在加载 HuggingFace 模型...";
+"Retry" = "重试";
+"Search or browse MLX models" = "搜索或浏览 MLX 模型";
+"Browse Popular" = "浏览热门";
+"Installed Models" = "已安装模型";
+"Available Models (%lld)" = "可用模型 (%lld)";
+"Installed" = "已安装";
+"Done" = "完成";
+"Download model" = "下载模型";
+"Delete model" = "删除模型";
+"Delete Model" = "删除模型";
+"Delete" = "删除";
+"Cancel" = "取消";
+"Delete \"%@\"? This will remove all model files and cannot be undone." = "删除「%@」？这将移除所有模型文件，且无法撤销。";
+
+/* Settings View */
+"General" = "通用";
+"Launch at Login" = "开机自启";
+"Start FlashMLX automatically when you log in" = "登录时自动启动 FlashMLX";
+"Verify Python" = "验证 Python";
+"DEFAULT SERVER SETTINGS" = "默认服务设置";
+"Default Port:" = "默认端口:";
+"Default Context:" = "默认上下文:";
+"About" = "关于";
+"Lightweight MLX Model Launcher for macOS" = "macOS 轻量级 MLX 模型启动器";
+"Danger Zone" = "危险操作";
+"Reset All Settings" = "重置所有设置";
+"Reset Settings" = "重置设置";
+"Reset" = "重置";
+"This will reset all settings to defaults. This cannot be undone." = "这将重置所有设置为默认值，且无法撤销。";
+
+/* Notifications */
+"Server started" = "服务已启动";
+"Server stopped" = "服务已停止";
+"Server not responding" = "服务无响应";
+
+/* Errors */
+"Python not found" = "未找到 Python";
+"ERROR: Python not found at %@" = "错误: 未找到 Python: %@";
