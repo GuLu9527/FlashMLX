@@ -4,6 +4,7 @@ struct ConfigView: View {
     @EnvironmentObject var configManager: ConfigManager
     @EnvironmentObject var server: ServerManager
     @Binding var selectedModel: MLXModel?
+    @State private var sliderValue: Double = 4096
 
     var body: some View {
         ScrollView {
@@ -33,33 +34,32 @@ struct ConfigView: View {
                 configSection("Context Length 上下文长度") {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
-                            Slider(
-                                value: Binding(
-                                    get: { Double(configManager.config.contextLength) },
-                                    set: { configManager.config.contextLength = Int($0) }
-                                ),
-                                in: 2048...131072,
-                                step: 2048
-                            )
-                            Text("\(configManager.config.contextLength)")
+                            Slider(value: $sliderValue, in: 2048...131072, step: 2048) { editing in
+                                if !editing {
+                                    configManager.config.contextLength = Int(sliderValue)
+                                }
+                            }
+                            Text("\(Int(sliderValue))")
                                 .font(.system(.body, design: .monospaced))
                                 .frame(width: 60, alignment: .trailing)
                         }
-                        // Quick presets
                         HStack(spacing: 4) {
                             ForEach([4096, 8192, 16384, 32768, 65536, 131072], id: \.self) { value in
-                                Button(action: { configManager.config.contextLength = value }) {
+                                Button(action: {
+                                    sliderValue = Double(value)
+                                    configManager.config.contextLength = value
+                                }) {
                                     Text(contextLabel(value))
                                         .font(.system(size: 10, weight: .medium))
                                         .padding(.horizontal, 6)
                                         .padding(.vertical, 3)
                                         .background(
                                             RoundedRectangle(cornerRadius: 4)
-                                                .fill(configManager.config.contextLength == value
+                                                .fill(Int(sliderValue) == value
                                                       ? Color.accentColor.opacity(0.2)
                                                       : Color.secondary.opacity(0.1))
                                         )
-                                        .foregroundColor(configManager.config.contextLength == value
+                                        .foregroundColor(Int(sliderValue) == value
                                                          ? .accentColor : .secondary)
                                 }
                                 .buttonStyle(.plain)
@@ -69,6 +69,7 @@ struct ConfigView: View {
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
+                    .onAppear { sliderValue = Double(configManager.config.contextLength) }
                 }
 
                 configSection("Port 端口") {
