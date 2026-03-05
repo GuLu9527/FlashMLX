@@ -59,6 +59,23 @@ struct PopoverView: View {
                 configManager.config.modelType = model.detectedModelType
             }
         }
+        .onAppear {
+            restoreLastModel()
+        }
+    }
+
+    private func restoreLastModel() {
+        let savedPath = configManager.config.modelPath
+        guard !savedPath.isEmpty else { return }
+        if let model = scanner.models.first(where: { $0.path == savedPath }) {
+            selectedModel = model
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                if let model = scanner.models.first(where: { $0.path == savedPath }) {
+                    selectedModel = model
+                }
+            }
+        }
     }
 
     private var headerView: some View {

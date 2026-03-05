@@ -90,6 +90,12 @@ class ServerManager: NSObject, ObservableObject {
             return
         }
 
+        guard !isPortInUse(port: config.port) else {
+            status = .error("Port \(config.port) in use")
+            appendLog("ERROR: Port \(config.port) is already in use")
+            return
+        }
+
         let proc = Process()
         proc.executableURL = URL(fileURLWithPath: pythonPath)
         proc.arguments = [
@@ -194,6 +200,24 @@ class ServerManager: NSObject, ObservableObject {
         status = .stopped
         appendLog("Server stopped.")
         sendNotification(title: "FlashMLX", body: String(localized: "Server stopped"))
+    }
+
+    private func isPortInUse(port: Int) -> Bool {
+        let sock = socket(AF_INET, SOCK_STREAM, 0)
+        guard sock >= 0 else { return false }
+        defer { close(sock) }
+
+        var addr = sockaddr_in()
+        addr.sin_family = sa_family_t(AF_INET)
+        addr.sin_port = in_port_t(port).bigEndian
+        addr.sin_addr.s_addr = inet_addr("127.0.0.1")
+
+        let result = withUnsafePointer(to: &addr) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                connect(sock, $0, socklen_t(MemoryLayout<sockaddr_in>.size))
+            }
+        }
+        return result == 0
     }
 
     private func isServerReady(_ output: String) -> Bool {
