@@ -22,16 +22,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
     }()
 
+    private var pidFileURL: URL {
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let dir = appSupport.appendingPathComponent("FlashMLX")
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appendingPathComponent("flashmlx.pid")
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Prevent multiple instances
-        let runningApps = NSWorkspace.shared.runningApplications.filter {
-            $0.bundleIdentifier == Bundle.main.bundleIdentifier && $0.processIdentifier != ProcessInfo.processInfo.processIdentifier
-        }
-        if let existing = runningApps.first {
-            existing.activate()
+        // Prevent multiple instances via PID file lock
+        if let existingPidStr = try? String(contentsOf: pidFileURL, encoding: .utf8),
+           let existingPid = Int32(existingPidStr.trimmingCharacters(in: .whitespacesAndNewlines)),
+           existingPid != ProcessInfo.processInfo.processIdentifier,
+           kill(existingPid, 0) == 0 {
+            // Another instance is running, activate it and quit
+            if let app = NSWorkspace.shared.runningApplications.first(where: { $0.processIdentifier == existingPid }) {
+                app.activate()
+            }
             NSApp.terminate(nil)
             return
         }
+        // Write our PID
+        try? "\(ProcessInfo.processInfo.processIdentifier)".write(to: pidFileURL, atomically: true, encoding: .utf8)
 
         AppDelegate.shared = self
 
