@@ -95,12 +95,19 @@ struct PopoverView: View {
             .controlSize(.small)
             .disabled(configManager.config.modelPath.isEmpty)
 
+            Button(action: { AppDelegate.shared.detachToWindow() }) {
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .foregroundColor(.secondary)
+            }
+            .buttonStyle(.borderless)
+            .help("独立窗口")
+
             Button(action: { NSApp.terminate(nil) }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.borderless)
-            .help("退出 FlashMLX")
+            .help("退出")
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
