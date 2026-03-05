@@ -83,15 +83,17 @@ struct ConfigView: View {
                     }
                 }
 
-                configSection("Model Type") {
-                    HStack {
-                        Image(systemName: configManager.config.modelType == .multimodal ? "eye" : "text.bubble")
-                            .foregroundColor(.secondary)
-                        Text(configManager.config.modelType.displayName)
-                            .font(.subheadline)
-                        Text("(Auto-detected)")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
+                if let model = selectedModel {
+                    configSection("Model Type") {
+                        HStack(spacing: 6) {
+                            Image(systemName: model.isMultimodal ? "eye" : "text.bubble")
+                                .foregroundColor(.accentColor)
+                            Text(model.modelType)
+                                .font(.system(.subheadline, design: .monospaced))
+                            Text("(\(configManager.config.modelType.displayName))")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
 
