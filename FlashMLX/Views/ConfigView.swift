@@ -84,13 +84,15 @@ struct ConfigView: View {
                 }
 
                 configSection("模型类型") {
-                    Picker("", selection: $configManager.config.modelType) {
-                        ForEach(ServerConfig.ModelType.allCases, id: \.self) { type in
-                            Text(type.displayName).tag(type)
-                        }
+                    HStack {
+                        Image(systemName: configManager.config.modelType == .multimodal ? "eye" : "text.bubble")
+                            .foregroundColor(.secondary)
+                        Text(configManager.config.modelType.displayName)
+                            .font(.subheadline)
+                        Text("(自动识别)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
                     }
-                    .pickerStyle(.segmented)
-                    .frame(width: 240)
                 }
 
                 configSection("Python") {

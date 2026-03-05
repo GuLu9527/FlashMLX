@@ -27,4 +27,13 @@ struct MLXModel: Identifiable, Hashable {
     var quantizationBadge: String {
         quantization ?? "fp16"
     }
+
+    var isMultimodal: Bool {
+        let multimodalTypes = ["llava", "idefics", "qwen2_vl", "pixtral", "paligemma", "fuyu", "kosmos"]
+        return multimodalTypes.contains { modelType.lowercased().contains($0) }
+    }
+
+    var detectedModelType: ServerConfig.ModelType {
+        isMultimodal ? .multimodal : .lm
+    }
 }

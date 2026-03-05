@@ -28,12 +28,10 @@ struct PopoverView: View {
             headerView
             Divider()
 
-            HStack(spacing: 0) {
+            NavigationSplitView {
                 ModelListView(selectedModel: $selectedModel)
-                    .frame(minWidth: 180, idealWidth: 200)
-
-                Divider()
-
+                    .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 260)
+            } detail: {
                 VStack(spacing: 0) {
                     tabBar
                     Divider()
@@ -54,10 +52,11 @@ struct PopoverView: View {
                 }
             }
         }
-        .frame(minWidth: 580, minHeight: 380)
+        .frame(minWidth: 600, minHeight: 400)
         .onChange(of: selectedModel) { _, newValue in
             if let model = newValue {
                 configManager.config.modelPath = model.path
+                configManager.config.modelType = model.detectedModelType
             }
         }
     }
