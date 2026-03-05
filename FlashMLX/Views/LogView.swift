@@ -28,12 +28,14 @@ struct LogView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 1) {
-                        ForEach(server.logs.indices, id: \.self) { index in
-                            Text(server.logs[index])
+                        let snapshot = Array(server.logs.enumerated())
+                        ForEach(snapshot, id: \.offset) { index, line in
+                            Text(line)
                                 .font(.system(size: 11, design: .monospaced))
-                                .foregroundColor(logColor(for: server.logs[index]))
+                                .foregroundColor(logColor(for: line))
                                 .textSelection(.enabled)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .id(index)
                         }
                     }
                     .padding(8)

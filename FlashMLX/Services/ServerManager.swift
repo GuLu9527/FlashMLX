@@ -132,12 +132,14 @@ class ServerManager: NSObject, ObservableObject {
         proc.terminationHandler = { [weak self] process in
             DispatchQueue.main.async {
                 self?.memoryTimer?.invalidate()
+                self?.healthTimer?.invalidate()
                 if process.terminationStatus != 0 && self?.status != .stopped {
                     self?.status = .error("Exit code: \(process.terminationStatus)")
                 } else {
                     self?.status = .stopped
                 }
                 self?.startTime = nil
+                self?.isHealthy = false
             }
         }
 

@@ -13,9 +13,9 @@ class ConfigManager: ObservableObject {
     init() {
         if let data = defaults.data(forKey: configKey),
            let saved = try? JSONDecoder().decode(ServerConfig.self, from: data) {
-            self.config = saved
+            _config = Published(initialValue: saved)
         } else {
-            self.config = ServerConfig()
+            _config = Published(initialValue: ServerConfig())
         }
     }
 

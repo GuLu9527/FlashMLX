@@ -11,17 +11,12 @@ A lightweight macOS menubar app for managing local MLX model inference servers.
 - ⚙️ **Configure** context length (2K–128K), port, model type, Python path
 - 📊 **Real-time monitoring** — server status, uptime, memory RSS
 - 📋 **Quick Actions** — copy API URL / cURL command with one click
-- 📦 **Model Download** — browse & download models from mlx-community on HuggingFace
-- 🗑️ **Model Management** — delete local models from within the app
-- 🔐 **Python Verification** — validate mlx-lm installation from Settings
+-  **Python Verification** — validate mlx-lm installation from Settings
 - 🚀 **Launch at Login** — optional auto-start via SMAppService
+- � **Detach to Window** — popover can detach to a resizable floating window
+- 🔔 **Notifications** — system notifications on server start/stop/error
+- 🌐 **i18n** — English + Chinese, follows system language
 - 🪶 **Lightweight** — ~2MB, no Electron, pure Swift + SwiftUI
-
-## Screenshots
-
-| Config | Status | Download |
-|--------|--------|----------|
-| Model selection, context length, port, memory estimate | Server status, uptime, memory, quick actions | Browse mlx-community, download, delete |
 
 ## Requirements
 
@@ -43,8 +38,6 @@ python3 -m venv ~/mlx-env
 ```bash
 ~/mlx-env/bin/huggingface-cli download mlx-community/Qwen2.5-7B-Instruct-4bit
 ```
-
-Or use the built-in **Download** tab in FlashMLX to browse and download models.
 
 ### 3. Build & Run
 
@@ -83,21 +76,20 @@ FlashMLX/
 ├── AppDelegate.swift                # NSStatusBar + Popover + icon state
 ├── Models/
 │   ├── MLXModel.swift               # Local model data struct
-│   ├── ServerConfig.swift           # Server config (Codable)
-│   └── HFModel.swift                # HuggingFace remote model
+│   └── ServerConfig.swift           # Server config (Codable)
 ├── Services/
 │   ├── ModelScanner.swift           # Scan ~/.cache/huggingface/hub/
-│   ├── ServerManager.swift          # Process start/stop + logs + memory
-│   ├── ConfigManager.swift          # UserDefaults persistence
-│   └── ModelDownloader.swift        # HF API browse + download
-└── Views/
-    ├── PopoverView.swift            # Main container (header + sidebar + tabs)
-    ├── ModelListView.swift          # Sidebar model list with badges
-    ├── ConfigView.swift             # Config panel (context, port, type, python)
-    ├── StatusView.swift             # Status cards + quick actions
-    ├── LogView.swift                # Real-time log viewer
-    ├── DownloadView.swift           # Model download/delete UI
-    └── SettingsView.swift           # Launch at login, python verify, reset
+│   ├── ServerManager.swift          # Process start/stop + logs + memory + health
+│   └── ConfigManager.swift          # UserDefaults persistence
+├── Views/
+│   ├── PopoverView.swift            # Main container (header + sidebar + tabs)
+│   ├── ModelListView.swift          # Sidebar model list with badges
+│   ├── ConfigView.swift             # Config panel (context, port, type, python)
+│   ├── StatusView.swift             # Status cards + quick actions
+│   ├── LogView.swift                # Real-time log viewer
+│   └── SettingsView.swift           # Launch at login, python verify, reset
+├── en.lproj/Localizable.strings     # English
+└── zh-Hans.lproj/Localizable.strings # Chinese
 ```
 
 ## Key Decisions
