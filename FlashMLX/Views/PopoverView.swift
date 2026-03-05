@@ -69,8 +69,6 @@ struct PopoverView: View {
         }
     }
 
-    @State private var statusPulse = false
-
     private var headerView: some View {
         HStack(spacing: 8) {
             Image(systemName: "bolt.fill")
@@ -91,10 +89,6 @@ struct PopoverView: View {
                 Circle()
                     .fill(statusColor)
                     .frame(width: 8, height: 8)
-                    .shadow(color: statusColor.opacity(server.status.isRunning ? 0.6 : 0), radius: 4)
-                    .scaleEffect(statusPulse && server.status.isRunning ? 1.2 : 1.0)
-                    .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: statusPulse)
-                    .onAppear { statusPulse = true }
                 Text(server.status.displayText)
                     .font(.caption)
                     .foregroundColor(.secondary)

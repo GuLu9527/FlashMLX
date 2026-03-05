@@ -3,9 +3,8 @@ import SwiftUI
 struct StatusView: View {
     @EnvironmentObject var server: ServerManager
     @EnvironmentObject var configManager: ConfigManager
-    @State private var uptimeRefresh = false
-
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var uptimeText = "--"
+    @State private var refreshTimer: Timer?
 
     var body: some View {
         ScrollView {
@@ -20,9 +19,19 @@ struct StatusView: View {
             }
             .padding(16)
         }
-        .onReceive(timer) { _ in
-            uptimeRefresh.toggle()
+        .onAppear { startTimer() }
+        .onDisappear { stopTimer() }
+    }
+
+    private func startTimer() {
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            uptimeText = server.uptime
         }
+    }
+
+    private func stopTimer() {
+        refreshTimer?.invalidate()
+        refreshTimer = nil
     }
 
     private var statusCard: some View {
@@ -66,7 +75,7 @@ struct StatusView: View {
 
             VStack(spacing: 8) {
                 infoRow("Port 端口", value: "\(configManager.config.port)")
-                infoRow("Uptime 运行时间", value: "\(server.uptime)\(uptimeRefresh ? "" : "")")
+                infoRow("Uptime 运行时间", value: uptimeText)
                 infoRow("Memory 内存", value: server.memoryUsageMB > 0 ? String(format: "%.0f MB", server.memoryUsageMB) : "Measuring 测量中...")
                 infoRow("Health 健康", value: server.isHealthy ? "✓ Healthy 健康" : "Checking 检查中...")
                 infoRow("API 地址", value: configManager.config.apiURL)
