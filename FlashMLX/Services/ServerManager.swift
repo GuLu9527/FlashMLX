@@ -10,10 +10,10 @@ enum ServerStatus: Equatable {
 
     var displayText: String {
         switch self {
-        case .stopped: return String(localized: "Stopped")
-        case .starting: return String(localized: "Starting...")
-        case .running: return String(localized: "Running")
-        case .error(let msg): return "Error: \(msg)"
+        case .stopped: return "Stopped 已停止"
+        case .starting: return "Starting 启动中..."
+        case .running: return "Running 运行中"
+        case .error(let msg): return "Error 错误: \(msg)"
         }
     }
 
@@ -51,7 +51,7 @@ class ServerManager: NSObject, ObservableObject {
             .sink { [weak self] newStatus in
                 switch newStatus {
                 case .running:
-                    self?.sendNotification(title: "FlashMLX", body: String(localized: "Server started"))
+                    self?.sendNotification(title: "FlashMLX", body: "Server started 服务已启动")
                 case .error(let msg):
                     self?.sendNotification(title: "FlashMLX", body: "Error: \(msg)")
 
@@ -85,8 +85,8 @@ class ServerManager: NSObject, ObservableObject {
 
         guard FileManager.default.fileExists(atPath: pythonPath) else {
             status = .error("Python not found at \(pythonPath)")
-            appendLog("ERROR: Python not found at \(pythonPath)")
-            appendLog("Please install: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm")
+            appendLog("ERROR 错误: Python not found 未找到 Python: \(pythonPath)")
+            appendLog("Please install 请安装: python3 -m venv ~/mlx-env && ~/mlx-env/bin/pip install mlx-lm")
             return
         }
 
@@ -191,7 +191,7 @@ class ServerManager: NSObject, ObservableObject {
         consecutiveFailures = 0
         status = .stopped
         appendLog("Server stopped.")
-        sendNotification(title: "FlashMLX", body: String(localized: "Server stopped"))
+        sendNotification(title: "FlashMLX", body: "Server stopped 服务已停止")
     }
 
     private func isServerReady(_ output: String) -> Bool {
@@ -272,7 +272,7 @@ class ServerManager: NSObject, ObservableObject {
                         if self.consecutiveFailures == 3 {
                             self.sendNotification(
                                 title: "FlashMLX",
-                                body: String(localized: "Server not responding")
+                                body: "Server not responding 服务无响应"
                             )
                         }
                     }

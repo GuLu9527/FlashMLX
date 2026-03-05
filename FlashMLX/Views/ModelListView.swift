@@ -17,7 +17,7 @@ struct ModelListView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Models")
+                Text("Models 模型")
                     .font(.subheadline.bold())
                 Spacer()
                 Text("\(filteredModels.count)")
@@ -41,7 +41,7 @@ struct ModelListView: View {
                 Image(systemName: "magnifyingglass")
                     .font(.caption2)
                     .foregroundColor(.secondary)
-                TextField("Filter...", text: $searchText)
+                TextField("Filter 搜索...", text: $searchText)
                     .textFieldStyle(.plain)
                     .font(.caption)
                 if !searchText.isEmpty {
@@ -63,7 +63,7 @@ struct ModelListView: View {
 
             if scanner.isScanning {
                 Spacer()
-                ProgressView("Scanning...")
+                ProgressView("Scanning 扫描中...")
                     .font(.caption)
                 Spacer()
             } else if scanner.models.isEmpty {
@@ -72,7 +72,7 @@ struct ModelListView: View {
                     Image(systemName: "tray")
                         .font(.title)
                         .foregroundColor(.secondary)
-                    Text("No MLX models found")
+                    Text("No MLX models found 未找到 MLX 模型")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Text("~/.cache/huggingface/hub/")
@@ -82,7 +82,7 @@ struct ModelListView: View {
                 Spacer()
             } else if filteredModels.isEmpty {
                 Spacer()
-                Text("No matches")
+                Text("No matches 无匹配结果")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()

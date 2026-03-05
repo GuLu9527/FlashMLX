@@ -8,11 +8,11 @@ struct PopoverView: View {
     @State private var selectedModel: MLXModel?
 
     enum Tab: String, CaseIterable {
-        case config = "Config"
-        case status = "Status"
-        case logs = "Logs"
-        case download = "Download"
-        case settings = "Settings"
+        case config = "Config 配置"
+        case status = "Status 状态"
+        case logs = "Logs 日志"
+        case download = "Download 下载"
+        case settings = "Settings 设置"
 
         var icon: String {
             switch self {
@@ -30,9 +30,11 @@ struct PopoverView: View {
             headerView
             Divider()
 
-            HSplitView {
+            HStack(spacing: 0) {
                 ModelListView(selectedModel: $selectedModel)
-                    .frame(minWidth: 190, maxWidth: 210)
+                    .frame(width: 200)
+
+                Divider()
 
                 VStack(spacing: 0) {
                     tabBar
@@ -100,7 +102,7 @@ struct PopoverView: View {
 
             Button(action: toggleServer) {
                 Label(
-                    server.status.isRunning ? "Stop" : "Start",
+                    server.status.isRunning ? "Stop 停止" : "Start 启动",
                     systemImage: server.status.isRunning ? "stop.fill" : "play.fill"
                 )
             }
@@ -117,7 +119,7 @@ struct PopoverView: View {
                     .font(.caption)
             }
             .buttonStyle(.borderless)
-            .help("Detach to window / 拆卸为独立窗口")
+            .help("Detach to window 拆卸为窗口")
 
             Button(action: { NSApp.terminate(nil) }) {
                 Image(systemName: "xmark.circle.fill")
@@ -125,7 +127,7 @@ struct PopoverView: View {
                     .font(.caption)
             }
             .buttonStyle(.borderless)
-            .help("Quit FlashMLX")
+            .help("Quit 退出 FlashMLX")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -134,8 +136,8 @@ struct PopoverView: View {
     private var tabBar: some View {
         HStack(spacing: 2) {
             ForEach(Tab.allCases, id: \.self) { tab in
-                Button(action: { selectedTab = tab }) {
-                    Label(LocalizedStringKey(tab.rawValue), systemImage: tab.icon)
+                Button(action: { withAnimation(.easeInOut(duration: 0.15)) { selectedTab = tab } }) {
+                    Label(tab.rawValue, systemImage: tab.icon)
                         .font(.caption)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)

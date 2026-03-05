@@ -7,14 +7,14 @@ struct LogView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("\(server.logs.count) lines")
+                Text("\(server.logs.count) lines 行")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()
-                Toggle("Auto-scroll", isOn: $autoScroll)
+                Toggle("Auto-scroll 自动滚动", isOn: $autoScroll)
                     .toggleStyle(.checkbox)
                     .font(.caption)
-                Button("Clear") {
+                Button("Clear 清除") {
                     server.logs.removeAll()
                 }
                 .font(.caption)
@@ -28,12 +28,11 @@ struct LogView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 1) {
-                        ForEach(Array(server.logs.enumerated()), id: \.offset) { index, line in
-                            Text(line)
+                        ForEach(server.logs.indices, id: \.self) { index in
+                            Text(server.logs[index])
                                 .font(.system(size: 11, design: .monospaced))
-                                .foregroundColor(logColor(for: line))
+                                .foregroundColor(logColor(for: server.logs[index]))
                                 .textSelection(.enabled)
-                                .id(index)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
@@ -42,9 +41,7 @@ struct LogView: View {
                 .background(Color(nsColor: .textBackgroundColor))
                 .onChange(of: server.logs.count) {
                     if autoScroll, let last = server.logs.indices.last {
-                        withAnimation {
-                            proxy.scrollTo(last, anchor: .bottom)
-                        }
+                        proxy.scrollTo(last, anchor: .bottom)
                     }
                 }
             }

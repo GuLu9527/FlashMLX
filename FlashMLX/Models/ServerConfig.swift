@@ -13,8 +13,8 @@ struct ServerConfig: Codable {
 
         var displayName: String {
             switch self {
-            case .lm: return String(localized: "Language Model")
-            case .multimodal: return String(localized: "Multimodal")
+            case .lm: return "Language Model 语言模型"
+            case .multimodal: return "Multimodal 多模态"
             }
         }
     }

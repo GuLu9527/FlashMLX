@@ -27,7 +27,7 @@ struct StatusView: View {
 
     private var statusCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("SERVER STATUS")
+            Text("SERVER STATUS 服务状态")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .textCase(.uppercase)
@@ -59,17 +59,17 @@ struct StatusView: View {
 
     private var infoCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("DETAILS")
+            Text("DETAILS 详情")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .textCase(.uppercase)
 
             VStack(spacing: 8) {
-                infoRow("Port", value: "\(configManager.config.port)")
-                infoRow("Uptime", value: "\(server.uptime)\(uptimeRefresh ? "" : "")")
-                infoRow("Memory", value: server.memoryUsageMB > 0 ? String(format: "%.0f MB", server.memoryUsageMB) : "Measuring...")
-                infoRow("Health", value: server.isHealthy ? "✓ Healthy" : "Checking...")
-                infoRow("API URL", value: configManager.config.apiURL)
+                infoRow("Port 端口", value: "\(configManager.config.port)")
+                infoRow("Uptime 运行时间", value: "\(server.uptime)\(uptimeRefresh ? "" : "")")
+                infoRow("Memory 内存", value: server.memoryUsageMB > 0 ? String(format: "%.0f MB", server.memoryUsageMB) : "Measuring 测量中...")
+                infoRow("Health 健康", value: server.isHealthy ? "✓ Healthy 健康" : "Checking 检查中...")
+                infoRow("API 地址", value: configManager.config.apiURL)
             }
             .padding(12)
             .background(RoundedRectangle(cornerRadius: 8).fill(Color(nsColor: .controlBackgroundColor)))
@@ -80,7 +80,7 @@ struct StatusView: View {
 
     private var actionsCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("QUICK ACTIONS")
+            Text("QUICK ACTIONS 快捷操作")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .textCase(.uppercase)
@@ -90,7 +90,7 @@ struct StatusView: View {
                     copyAPIURL()
                     showCopied("API URL")
                 }) {
-                    Label("Copy API URL", systemImage: "doc.on.doc")
+                    Label("Copy API URL 复制地址", systemImage: "doc.on.doc")
                         .font(.caption)
                 }
 
@@ -98,12 +98,12 @@ struct StatusView: View {
                     copyCurlCommand()
                     showCopied("cURL")
                 }) {
-                    Label("Copy cURL", systemImage: "terminal")
+                    Label("Copy cURL 复制命令", systemImage: "terminal")
                         .font(.caption)
                 }
 
                 if let feedback = copiedFeedback {
-                    Text("\(feedback) copied!")
+                    Text("\(feedback) copied 已复制!")
                         .font(.caption2)
                         .foregroundColor(.green)
                         .transition(.opacity)

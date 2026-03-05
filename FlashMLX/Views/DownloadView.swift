@@ -14,7 +14,7 @@ struct DownloadView: View {
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.secondary)
-                TextField("Search mlx-community models...", text: $searchText)
+                TextField("Search mlx-community models 搜索模型...", text: $searchText)
                     .textFieldStyle(.plain)
                     .onSubmit {
                         downloader.fetchModels(query: searchText)
@@ -29,7 +29,7 @@ struct DownloadView: View {
                     }
                     .buttonStyle(.borderless)
                 }
-                Button("Search") {
+                Button("Search 搜索") {
                     downloader.fetchModels(query: searchText)
                 }
                 .controlSize(.small)
@@ -42,7 +42,7 @@ struct DownloadView: View {
             // Content
             if downloader.isLoading {
                 Spacer()
-                ProgressView("Loading models from HuggingFace...")
+                ProgressView("Loading from HuggingFace 加载中...")
                     .font(.caption)
                 Spacer()
             } else if let error = downloader.errorMessage {
@@ -54,7 +54,7 @@ struct DownloadView: View {
                     Text(error)
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Button("Retry") {
+                    Button("Retry 重试") {
                         downloader.fetchModels(query: searchText)
                     }
                     .controlSize(.small)
@@ -66,10 +66,10 @@ struct DownloadView: View {
                     Image(systemName: "arrow.down.circle")
                         .font(.title)
                         .foregroundColor(.secondary)
-                    Text("Search or browse MLX models")
+                    Text("Search or browse MLX models 搜索或浏览 MLX 模型")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Button("Browse Popular") {
+                    Button("Browse Popular 浏览热门") {
                         downloader.fetchModels()
                     }
                     .controlSize(.small)
@@ -79,7 +79,7 @@ struct DownloadView: View {
                 List {
                     // Local models section with delete
                     if !localModelsToShow.isEmpty {
-                        Section("Installed Models") {
+                        Section("Installed Models 已安装") {
                             ForEach(localModelsToShow) { model in
                                 LocalModelRow(model: model) {
                                     modelToDelete = model
@@ -90,7 +90,7 @@ struct DownloadView: View {
                     }
 
                     // Remote models section
-                    Section("Available Models (\(downloader.remoteModels.count))") {
+                    Section("Available 可用 (\(downloader.remoteModels.count))") {
                         ForEach(downloader.remoteModels) { model in
                             RemoteModelRow(
                                 model: model,
@@ -122,15 +122,15 @@ struct DownloadView: View {
                 scanner.scan()
             }
         }
-        .alert("Delete Model", isPresented: $showDeleteAlert, presenting: modelToDelete) { model in
-            Button("Delete", role: .destructive) {
+        .alert("Delete Model 删除模型", isPresented: $showDeleteAlert, presenting: modelToDelete) { model in
+            Button("Delete 删除", role: .destructive) {
                 if downloader.deleteModel(model: model) {
                     scanner.scan()
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel 取消", role: .cancel) {}
         } message: { model in
-            Text("Delete \"\(model.displayName)\"? This will remove all model files and cannot be undone.")
+            Text("Delete 删除 \"\(model.displayName)\"? This cannot be undone 此操作无法撤销。")
         }
     }
 
@@ -178,7 +178,7 @@ struct RemoteModelRow: View {
             Spacer()
 
             if isInstalled {
-                Label("Installed", systemImage: "checkmark.circle.fill")
+                Label("Installed 已安装", systemImage: "checkmark.circle.fill")
                     .font(.caption2)
                     .foregroundColor(.green)
             } else {
@@ -188,7 +188,7 @@ struct RemoteModelRow: View {
                         Image(systemName: "arrow.down.circle")
                     }
                     .buttonStyle(.borderless)
-                    .help("Download model")
+                    .help("Download 下载")
 
                 case .downloading(let progress):
                     HStack(spacing: 6) {
@@ -205,7 +205,7 @@ struct RemoteModelRow: View {
                     }
 
                 case .completed:
-                    Label("Done", systemImage: "checkmark.circle.fill")
+                    Label("Done 完成", systemImage: "checkmark.circle.fill")
                         .font(.caption2)
                         .foregroundColor(.green)
 
@@ -252,7 +252,7 @@ struct LocalModelRow: View {
                     .font(.caption)
             }
             .buttonStyle(.borderless)
-            .help("Delete model")
+            .help("Delete 删除")
         }
         .padding(.vertical, 2)
     }
