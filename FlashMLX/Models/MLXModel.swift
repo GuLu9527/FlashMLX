@@ -28,9 +28,19 @@ struct MLXModel: Identifiable, Hashable {
         quantization ?? "fp16"
     }
 
+    let hasVisionConfig: Bool
+
     var isMultimodal: Bool {
-        let multimodalTypes = ["llava", "idefics", "qwen2_vl", "pixtral", "paligemma", "fuyu", "kosmos"]
-        return multimodalTypes.contains { modelType.lowercased().contains($0) }
+        if hasVisionConfig { return true }
+        let multimodalTypes = [
+            "llava", "idefics", "qwen2_vl", "qwen2_5_vl", "qwen_vl",
+            "pixtral", "paligemma", "fuyu", "kosmos", "phi3_v", "phi3_vision",
+            "mllama", "molmo", "internvl", "minicpm_v", "cogvlm",
+            "blip", "git", "clip", "siglip", "florence",
+        ]
+        let nameLower = displayName.lowercased()
+        let typeLower = modelType.lowercased()
+        return multimodalTypes.contains { typeLower.contains($0) || nameLower.contains($0) }
     }
 
     var detectedModelType: ServerConfig.ModelType {

@@ -50,8 +50,11 @@ class ModelScanner: ObservableObject {
 
             let modelType = config["model_type"] as? String ?? "unknown"
             let quantization = getQuantization(config: config)
-            let paramCount = getParameterCount(config: config)
+            let paramCount = getParameterCount(name: dir, config: config)
             let totalSize = directorySize(path: snapshotPath)
+            let hasVision = config["vision_config"] is [String: Any]
+                || config["visual"] is [String: Any]
+                || config["image_size"] is Int
 
             let model = MLXModel(
                 id: dir,
@@ -60,7 +63,8 @@ class ModelScanner: ObservableObject {
                 size: totalSize,
                 modelType: modelType,
                 quantization: quantization,
-                parameterCount: paramCount
+                parameterCount: paramCount,
+                hasVisionConfig: hasVision
             )
             results.append(model)
         }
@@ -99,13 +103,22 @@ class ModelScanner: ObservableObject {
         return nil
     }
 
-    private func getParameterCount(config: [String: Any]) -> String? {
+    private func getParameterCount(name: String, config: [String: Any]) -> String? {
+        // Try to extract from model name first (e.g. "Qwen3-8B-4bit" → "8B")
+        let pattern = #"(\d+(?:\.\d+)?)[Bb](?:-|$|_)"#
+        if let regex = try? NSRegularExpression(pattern: pattern),
+           let match = regex.firstMatch(in: name, range: NSRange(name.startIndex..., in: name)),
+           let range = Range(match.range(at: 1), in: name) {
+            let value = String(name[range])
+            return "\(value)B"
+        }
+
+        // Fallback: estimate from architecture
         guard let hiddenSize = config["hidden_size"] as? Int,
               let numLayers = config["num_hidden_layers"] as? Int,
               let vocabSize = config["vocab_size"] as? Int else { return nil }
 
         let intermediateSize = config["intermediate_size"] as? Int ?? hiddenSize * 4
-        // Attention (Q/K/V/O) + FFN (gate/up/down) + embedding
         let attn = hiddenSize * hiddenSize * 4
         let ffn = hiddenSize * intermediateSize * 3
         let params = Double((attn + ffn) * numLayers + vocabSize * hiddenSize) / 1_000_000_000.0
